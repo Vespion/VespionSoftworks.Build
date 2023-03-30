@@ -7,9 +7,9 @@
     <UsingTask TaskName="VespionSoftworks.Build.MsBuild.Tasks.Git.CalculateSemanticVersion" AssemblyFile="$(CustomTasksAssembly)"/>
 
     <Target Name="GatherRepositoryInfo">
-        <LocateRepository ProjectPath="$(MSBuildProjectDirectory)">
+        <VespionSoftworks.Build.MsBuild.Tasks.Git.LocateRepository ProjectPath="$(MSBuildProjectDirectory)">
             <Output TaskParameter="RepositoryRoot" PropertyName="RepositoryRoot"/>
-        </LocateRepository>
+        </VespionSoftworks.Build.MsBuild.Tasks.Git.LocateRepository>
         
         <PropertyGroup Condition="'$(OS)' == 'Windows_NT'">
             <_LongShaFormat>%%H</_LongShaFormat>
