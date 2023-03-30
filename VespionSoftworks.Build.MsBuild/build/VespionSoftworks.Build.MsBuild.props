@@ -7,7 +7,7 @@
         <_Vesp_CustomTasksDirectory>$(MSBuildThisFileDirectory)..\tasks</_Vesp_CustomTasksDirectory>
         
         <!--Reference to the assembly which contains the MSBuild Task-->
-        <CustomTasksAssembly>$(_Vesp_CustomTasksDirectory)\netstandard2.0\$(MSBuildThisFileName).dll</CustomTasksAssembly>
+        <CustomTasksAssembly>$(_Vesp_CustomTasksDirectory)\net7.0\$(MSBuildThisFileName).dll</CustomTasksAssembly>
     </PropertyGroup>
 
 </Project>

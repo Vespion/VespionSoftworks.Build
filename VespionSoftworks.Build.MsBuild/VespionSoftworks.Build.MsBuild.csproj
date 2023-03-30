@@ -3,6 +3,11 @@
     <PropertyGroup>
         <TargetFramework>net7.0</TargetFramework>
         <Nullable>enable</Nullable>
+        <IsPackable>true</IsPackable>
+        <Company>Vespion Softworks</Company>
+        <Title>Vespion Softworks MSBuild Tasks</Title>
+        <Authors>Vespion</Authors>
+        <Description>Reusable MSBuild tasks and targets for projects</Description>
     </PropertyGroup>
 
     <ItemGroup>

@@ -10,8 +10,7 @@
         <LocateRepository ProjectPath="$(MSBuildProjectDirectory)">
             <Output TaskParameter="RepositoryRoot" PropertyName="RepositoryRoot"/>
         </LocateRepository>
-        <Message Importance="High" Text="RepositoryRoot: $(RepositoryRoot)"/>
-
+        
         <PropertyGroup Condition="'$(OS)' == 'Windows_NT'">
             <_LongShaFormat>%%H</_LongShaFormat>
         </PropertyGroup>
@@ -57,22 +56,24 @@
         </Exec>
     </Target>
     
-    <Target Name="GenerateSemanticVersion" DependsOnTargets="GatherRepositoryInfo" BeforeTargets="GetAssemblyVersion;GenerateNuspec;GetPackageContents">
+    <Target Name="GenerateSemanticVersion" DependsOnTargets="GatherRepositoryInfo;BeforeBuild" BeforeTargets="GetAssemblyVersion;GenerateNuspec;GetPackageContents">
         <CalculateSemanticVersion
                 RepositoryRoot="$(RepositoryRoot)"
                 CurrentBranch="$(ActiveBranch)"
                 Head="$(ActiveSha)"
                 ProjectRoot="$(MSBuildProjectDirectory)"
         >
-            <Output TaskParameter="Major" ItemName="SemVerMajor"/>
-            <Output TaskParameter="Minor" ItemName="SemVerMinor"/>
-            <Output TaskParameter="Patch" ItemName="SemVerPatch"/>
-            <Output TaskParameter="Prerelease" ItemName="SemVerPrerelease"/>
-            <Output TaskParameter="Metadata" ItemName="SemVerMetadata"/>
+            <Output TaskParameter="Major" PropertyName="SemVerMajor"/>
+            <Output TaskParameter="Minor" PropertyName="SemVerMinor"/>
+            <Output TaskParameter="Patch" PropertyName="SemVerPatch"/>
+            <Output TaskParameter="Prerelease" PropertyName="SemVerPrerelease"/>
+            <Output TaskParameter="Metadata" PropertyName="SemVerMetadata"/>
         </CalculateSemanticVersion>
         <PropertyGroup>
             <VersionPrefix>$(SemVerMajor).$(SemVerMinor).$(SemVerPatch)</VersionPrefix>
             <VersionSuffix>$(SemVerPrerelease)+$(SemVerMetadata)</VersionSuffix>
+            <Version>$(VersionPrefix)-$(VersionSuffix)</Version>
+            <PackageVersion>$(Version)</PackageVersion>
         </PropertyGroup>
     </Target>
 </Project>

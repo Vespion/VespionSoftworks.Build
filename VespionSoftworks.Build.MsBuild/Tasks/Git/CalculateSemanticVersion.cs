@@ -82,7 +82,7 @@ public partial class CalculateSemanticVersion: Task
 			version = version.AddPrereleaseIdentifier(commitCount.ToString());
 		}
 		
-		Log.LogMessage(MessageImportance.High, $"Calculated version: {version}!");
+		// Log.LogMessage(MessageImportance.High, $"Calculated version: {version}!");
 		SetVersion(version);
 		return true;
 	}
