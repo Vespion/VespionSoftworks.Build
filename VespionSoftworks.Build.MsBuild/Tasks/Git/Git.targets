@@ -2,9 +2,9 @@
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
     
     <!--Register our custom task-->
-    <UsingTask TaskName="$(MSBuildProjectName).Tasks.Git.LocateRepository" AssemblyFile="$(CustomTasksAssembly)"/>
-    <UsingTask TaskName="$(MSBuildProjectName).Tasks.Git.GetGitRefs" AssemblyFile="$(CustomTasksAssembly)"/>
-    <UsingTask TaskName="$(MSBuildProjectName).Tasks.Git.CalculateSemanticVersion" AssemblyFile="$(CustomTasksAssembly)"/>
+    <UsingTask TaskName="VespionSoftworks.Build.MsBuild.Tasks.Git.LocateRepository" AssemblyFile="$(CustomTasksAssembly)"/>
+    <UsingTask TaskName="VespionSoftworks.Build.MsBuild.Tasks.Git.GetGitRefs" AssemblyFile="$(CustomTasksAssembly)"/>
+    <UsingTask TaskName="VespionSoftworks.Build.MsBuild.Tasks.Git.CalculateSemanticVersion" AssemblyFile="$(CustomTasksAssembly)"/>
 
     <Target Name="GatherRepositoryInfo">
         <LocateRepository ProjectPath="$(MSBuildProjectDirectory)">
