@@ -71,8 +71,10 @@
         </CalculateSemanticVersion>
         <PropertyGroup>
             <VersionPrefix>$(SemVerMajor).$(SemVerMinor).$(SemVerPatch)</VersionPrefix>
-            <VersionSuffix>$(SemVerPrerelease)+$(SemVerMetadata)</VersionSuffix>
-            <Version>$(VersionPrefix)-$(VersionSuffix)</Version>
+            <VersionSuffix Condition=" $(SemVerPrerelease) != '' ">$(SemVerPrerelease)+$(SemVerMetadata)</VersionSuffix>
+            <VersionSuffix Condition=" $(SemVerPrerelease) == '' ">$(SemVerMetadata)</VersionSuffix>
+            <Version Condition=" $(SemVerPrerelease) != '' ">$(VersionPrefix)-$(VersionSuffix)</Version>
+            <Version Condition=" $(SemVerPrerelease) == '' ">$(VersionPrefix)+$(VersionSuffix)</Version>
             <PackageVersion>$(Version)</PackageVersion>
         </PropertyGroup>
     </Target>
