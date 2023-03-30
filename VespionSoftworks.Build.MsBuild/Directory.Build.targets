@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+    <PropertyGroup>
+        <CustomTasksAssembly>..\..\bin\$(Configuration)\net7.0\$(MSBuildProjectName).dll</CustomTasksAssembly>
+    </PropertyGroup>
+    <Import Project="Tasks\Git\Git.targets" />
+
+    <Target Name="AfterBuild" AfterTargets="Build">
+        <Message Importance="High" Text="AfterBuild" />
+        <Message Importance="High" Text="Version Prefix: $(VersionPrefix)" />
+        <Message Importance="High" Text="Version Suffix: $(VersionSuffix)" />
+        <Message Importance="High" Text="Version: $(Version)" />
+    </Target>
+
+</Project>

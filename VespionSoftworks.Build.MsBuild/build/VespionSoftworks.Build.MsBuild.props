@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+    <!--defining properties interesting for my task-->
+    <PropertyGroup>
+        <!--The folder where the custom task will be present. It points to inside the nuget package. -->
+        <_Vesp_CustomTasksDirectory>$(MSBuildThisFileDirectory)..\tasks</_Vesp_CustomTasksDirectory>
+        
+        <!--Reference to the assembly which contains the MSBuild Task-->
+        <CustomTasksAssembly>$(_Vesp_CustomTasksDirectory)\netstandard2.0\$(MSBuildThisFileName).dll</CustomTasksAssembly>
+    </PropertyGroup>
+
+</Project>

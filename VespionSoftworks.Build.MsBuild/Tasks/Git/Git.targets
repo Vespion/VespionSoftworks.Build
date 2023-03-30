@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+    
+    <!--Register our custom task-->
+    <UsingTask TaskName="$(MSBuildProjectName).Tasks.Git.LocateRepository" AssemblyFile="$(CustomTasksAssembly)"/>
+    <UsingTask TaskName="$(MSBuildProjectName).Tasks.Git.GetGitRefs" AssemblyFile="$(CustomTasksAssembly)"/>
+    <UsingTask TaskName="$(MSBuildProjectName).Tasks.Git.CalculateSemanticVersion" AssemblyFile="$(CustomTasksAssembly)"/>
+
+    <Target Name="GatherRepositoryInfo">
+        <LocateRepository ProjectPath="$(MSBuildProjectDirectory)">
+            <Output TaskParameter="RepositoryRoot" PropertyName="RepositoryRoot"/>
+        </LocateRepository>
+        <Message Importance="High" Text="RepositoryRoot: $(RepositoryRoot)"/>
+
+        <PropertyGroup Condition="'$(OS)' == 'Windows_NT'">
+            <_LongShaFormat>%%H</_LongShaFormat>
+        </PropertyGroup>
+        <PropertyGroup Condition="'$(OS)' != 'Windows_NT'">
+            <_LongShaFormat>%H</_LongShaFormat>
+        </PropertyGroup>
+        
+        <Exec Command='git -c log.showSignature=false log --format=format:$(_LongShaFormat) -n 1'
+              EchoOff='true'
+              StandardErrorImportance="low"
+              StandardOutputImportance="low"
+              ConsoleToMSBuild="true"
+              WorkingDirectory="$(RepositoryRoot)"
+              ContinueOnError="true"
+              StdOutEncoding='utf-8'>
+            <Output TaskParameter="ConsoleOutput" PropertyName="ActiveSha"/>
+            <Output TaskParameter="ExitCode" PropertyName="MSBuildLastExitCode" />
+        </Exec>
+
+        <Exec Command='git rev-parse --abbrev-ref HEAD'
+              EchoOff='true'
+              StandardErrorImportance="low"
+              StandardOutputImportance="low"
+              ConsoleToMSBuild="true"
+              WorkingDirectory="$(RepositoryRoot)"
+              ContinueOnError="true"
+              StdOutEncoding='utf-8'>
+            <Output TaskParameter="ConsoleOutput" PropertyName="ActiveBranch"/>
+            <Output TaskParameter="ExitCode" PropertyName="MSBuildLastExitCode" />
+        </Exec>
+
+        <!-- CI systems may checkout the specific commit, rather than the branch, so we need to fallback -->
+        <Exec Command='git name-rev --name-only $(GitNameRevOptions) HEAD'
+              Condition=" '$(ActiveBranch)' == '' "
+              EchoOff='true'
+              StandardErrorImportance="low"
+              StandardOutputImportance="low"
+              ConsoleToMSBuild="true"
+              WorkingDirectory="$(RepositoryRoot)"
+              ContinueOnError="true"
+              StdOutEncoding='utf-8'>
+            <Output TaskParameter="ConsoleOutput" PropertyName="ActiveBranch"/>
+        </Exec>
+    </Target>
+    
+    <Target Name="GenerateSemanticVersion" DependsOnTargets="GatherRepositoryInfo" BeforeTargets="GetAssemblyVersion;GenerateNuspec;GetPackageContents">
+        <CalculateSemanticVersion
+                RepositoryRoot="$(RepositoryRoot)"
+                CurrentBranch="$(ActiveBranch)"
+                Head="$(ActiveSha)"
+                ProjectRoot="$(MSBuildProjectDirectory)"
+        >
+            <Output TaskParameter="Major" ItemName="SemVerMajor"/>
+            <Output TaskParameter="Minor" ItemName="SemVerMinor"/>
+            <Output TaskParameter="Patch" ItemName="SemVerPatch"/>
+            <Output TaskParameter="Prerelease" ItemName="SemVerPrerelease"/>
+            <Output TaskParameter="Metadata" ItemName="SemVerMetadata"/>
+        </CalculateSemanticVersion>
+        <PropertyGroup>
+            <VersionPrefix>$(SemVerMajor).$(SemVerMinor).$(SemVerPatch)</VersionPrefix>
+            <VersionSuffix>$(SemVerPrerelease)+$(SemVerMetadata)</VersionSuffix>
+        </PropertyGroup>
+    </Target>
+</Project>
